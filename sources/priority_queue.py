@@ -1,6 +1,6 @@
 from request import Request
 class priority_queue:
-    def __init__(self,direction):
+    def __init__(self):
         self.Active_Queue=[]
         self.Waiting_Queue=[]
         self.MinHeap_Queue=[]
