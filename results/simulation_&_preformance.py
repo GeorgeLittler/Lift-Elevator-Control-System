@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
 
-# Fix seed for reproducibility
 np.random.seed(42)
 
 num_requests = 500 
@@ -30,7 +28,7 @@ def calculate_lift_metrics(df):
         subset = df[df["Algorithm"] == algo]
 
         #wait time
-        subset["Wait_Time"] = np.abs(subset["End_Floor"] - subset["Start_Floor"]) * 2  # Assume 2s per floor
+        subset["Wait_Time"] = np.abs(subset["End_Floor"] - subset["Start_Floor"]) * 2#assume 2s per floor
 
         avg_wait_time = subset["Wait_Time"].mean()
         requests_served = len(subset)
@@ -47,10 +45,9 @@ def calculate_lift_metrics(df):
 
     return pd.DataFrame(results)
 
-# Compute metrics
 performance_df = calculate_lift_metrics(requests)
 
-# Save metrics to CSV for further analysis
+#save metrics to CSV
 performance_df.to_csv("lift_performance.csv", index=False)
 
 print("Performance Metrics:\n", performance_df)
