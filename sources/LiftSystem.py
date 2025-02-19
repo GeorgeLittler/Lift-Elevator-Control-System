@@ -1,11 +1,11 @@
-from priority_queue import priorityQueue
+from PriorityQueue import PriorityQueue
 from Lift import Lift
-from request import Request
-class Lift_System:
+from Request import Request
+class LiftSystem:
     def __init__(self, total_floors):
         self.total_floors = total_floors
         self.Lift=Lift()
-        self.priority_queue = priorityQueue(self.Lift)
+        self.priority_queue = PriorityQueue(self.Lift)
         
        
 
@@ -82,7 +82,7 @@ class Lift_System:
 
 if __name__ == "__main__":
     # Create lift system
-    lift_system = Lift_System(total_floors=10)
+    lift_system = LiftSystem(total_floors=10)
 
     # Add test requests
     request1 = Request(1, 5)  # Moving up

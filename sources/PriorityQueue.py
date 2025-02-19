@@ -1,6 +1,6 @@
-from request import Request
+from Request import Request
 from Lift import Lift
-class priorityQueue:
+class PriorityQueue:
     def __init__(self, lift_instance: Lift):
         self.lift = lift_instance
         self.Active_Queue: list[Request] = [] 

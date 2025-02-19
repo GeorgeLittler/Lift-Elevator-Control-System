@@ -40,3 +40,7 @@ def validate_requests(json_filename, dataset_index=0):
 # Example usage:
 requests = validate_requests("../results/data/input1.json", dataset_index=0)
 print(requests)
+
+"""Data format:
+{1: [4, 6], 2: [3, 5, 7], 3: [8], 4: [2, 5], 5: [6, 1], 6: [7], 7: [4, 2], 8: [3]}
+"""
