@@ -5,20 +5,62 @@ from SCAN import SCAN
 from LOOK import LOOK
 from MYLIFT import MYLIFT
 
-"""The parameters being passed are: the input file, time taken for the lift to travel between floors, and the time
-taken for people to exit the lift at a particular floor. Each of these variables that the values of the functions
-are passed to will represent an integer (in seconds), and these integers can be used to plot graphs that show
-the time it takes for each algorithm to complete all of the requests in the input file, as well as compare the
-performance visually between each of the algorithms."""
+# Import helper functions - the first returns the total floors and capacity, and the second returns the requests data
+from check_floors_and_capacity import check_floors_and_capacity
+from validate_requests import validate_requests
 
-SCAN1 = SCAN("../results/data/input1.json", 2, 4)
-LOOK1 = LOOK("../results/data/input1.json", 2, 4)
-MYLIFT1 = MYLIFT("../results/data/input1.json", 2, 4)
+# Defines constants to be used in each algorithm
+TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS = 2
+TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT = 4
 
-SCAN2 = SCAN("../results/data/input2.json", 2, 4)
-LOOK2 = LOOK("../results/data/input2.json", 2, 4)
-MYLIFT2 = MYLIFT("../results/data/input2.json", 2, 4)
+'''
+Below we are testing each of the 3 algorithms on each of the 3 input JSON files (subject to change). Each algorithm should return an
+integer (in seconds), which represents how long it takes for the algorithm to complete every request. These
+integers can then be used to compare and visualise the performance of each algorithm against the others by using
+graphs/charts.
+'''
 
-SCAN3 = SCAN("../results/data/input3.json", 2, 4)
-LOOK3 = LOOK("../results/data/input3.json", 2, 4)
-MYLIFT3 = MYLIFT("../results/data/input3.json", 2, 4)
+# This is defining the filepath to the first input file
+input1_file_path = "../results/data/input1.json"
+
+SCAN1 = SCAN(check_floors_and_capacity(input1_file_path, dataset_index=0),
+             validate_requests(input1_file_path, dataset_index=0),
+             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+LOOK1 = LOOK(check_floors_and_capacity(input1_file_path, dataset_index=0),
+             validate_requests(input1_file_path, dataset_index=0),
+             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+MYLIFT1 = MYLIFT(check_floors_and_capacity(input1_file_path, dataset_index=0),
+                validate_requests(input1_file_path, dataset_index=0),
+                TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+
+input2_file_path = "../results/data/input2.json"
+
+SCAN2 = SCAN(check_floors_and_capacity(input2_file_path, dataset_index=0),
+             validate_requests(input2_file_path, dataset_index=0),
+             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+LOOK2 = LOOK(check_floors_and_capacity(input2_file_path, dataset_index=0),
+             validate_requests(input2_file_path, dataset_index=0),
+             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+MYLIFT2 = MYLIFT(check_floors_and_capacity(input2_file_path, dataset_index=0),
+                validate_requests(input2_file_path, dataset_index=0),
+                TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+
+input3_file_path = "../results/data/input3.json"
+
+SCAN3 = SCAN(check_floors_and_capacity(input3_file_path, dataset_index=0),
+             validate_requests(input3_file_path, dataset_index=0),
+             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+LOOK3 = LOOK(check_floors_and_capacity(input3_file_path, dataset_index=0),
+             validate_requests(input3_file_path, dataset_index=0),
+             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+
+MYLIFT3 = MYLIFT(check_floors_and_capacity(input3_file_path, dataset_index=0),
+                validate_requests(input3_file_path, dataset_index=0),
+                TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
