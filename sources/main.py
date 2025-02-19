@@ -14,9 +14,9 @@ TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS = 2
 TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT = 4
 
 '''
-Below we are testing each of the 3 algorithms on each of the 3 input JSON files (subject to change). Each algorithm should return an
-integer (in seconds), which represents how long it takes for the algorithm to complete every request. These
-integers can then be used to compare and visualise the performance of each algorithm against the others by using
+Below we are testing each of the 3 algorithms on each of the 3 input JSON files (subject to change). Each algorithm 
+should return an integer (in seconds), which represents how long it takes for the algorithm to complete every request. 
+These integers can then be used to compare and visualise the performance of each algorithm against the others by using
 graphs/charts.
 '''
 
