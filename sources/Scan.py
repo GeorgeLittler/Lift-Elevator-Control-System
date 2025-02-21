@@ -1,95 +1,124 @@
-from collections import deque
+from collections import defaultdict
+from QueueObject import Queue
+from Request import Request
+from Lift import Lift
 
 class Elevator:
     def __init__(self, floors, capacity, initial_floor=0):
         self.floors = floors  # Total number of floors
-        self.capacity = capacity  # Lift capacity
+        self.Lift = Lift()  # Lift capacity
         self.current_floor = initial_floor  # Elevator starts here
 
         # Separate queues for UP and DOWN direction
-        self.up_queue = deque()
-        self.down_queue = deque()
-        self.passenger_destinations = deque()  # Tracks people inside the elevator
+        self.up_queue = Queue()
+        self.down_queue = Queue()
+        self.passenger_destinations = defaultdict(int)  # Tracks people inside the elevator
 
     def add_request(self, floor, destinations):
         """ Adds floor requests to appropriate queue """
         if 0 <= floor < self.floors:
-            for dest in destinations:
-                if dest > floor:
-                    self.up_queue.append((floor, dest))  # Requests to go UP
-                elif dest < floor:
-                    self.down_queue.append((floor, dest))  # Requests to go DOWN
+            if Request.destination_floor > Request.start_floor:
+                self.up_queue.enqueue(Request)  # Request to go UP
+            elif Request.destination_floor < Request.start_floor:
+                self.down_queue.enqueue(Request)  # Request to go DOWN
 
     def determine_initial_direction(self):
         """ Determines if the elevator should move UP or DOWN based on nearest request """
-        if self.up_queue and (not self.down_queue or min(self.up_queue)[0] < max(self.down_queue)[0]):
+        if self.up_queue.peek() and (not self.down_queue.peek() or self.up_queue.peek().start_floor < self.down_queue.peek().start_floor):
             return "UP"
-        elif self.down_queue:
+        elif self.down_queue.peek():
             return "DOWN"
         return "IDLE"
 
     def scan_algorithm(self):
         """ Implements the SCAN (Elevator) algorithm """
-        if not self.up_queue and not self.down_queue:
+        if not self.up_queue.ppek() and not self.down_queue.peek() and not self.passenger_dewstinations:
             print("No pending requests.")
             return
 
         # Sort queues to process requests in order
-        self.up_queue = deque(sorted(self.up_queue, key=lambda x: x[0]))
-        self.down_queue = deque(sorted(self.down_queue, key=lambda x: x[0], reverse=True))
-
-        # Determine starting direction
-        direction = self.determine_initial_direction()
-        if direction == "IDLE":
-            print("No valid requests to process.")
-            return
-
         highest_floor = self.floors - 1
         lowest_floor = 0
+        current_passenger_count = 0  # Track number of passengers currently in the lift
+
+        skipped_passengers_up = []  # Store skipped passengers during UP phase
+        skipped_passengers_down = []  # Store skipped passengers during DOWN phase
 
         # Process UP direction
-        print("\n Moving UP:")
-        while self.up_queue:
-            request = self.up_queue.popleft()
-            pickup_floor, destination = request
-            self.current_floor = pickup_floor
-            print(f" Elevator stopping at floor {pickup_floor} - Picking up passenger for floor {destination}")
+        print("\nMoving UP:")
+        while self.up_queue.peek():
+            request = self.up_queue.dequeue()
 
-            # Add passenger's destination to queue
-            self.passenger_destinations.append(destination)
+            # Check if there's enough space for the passenger
+            if current_passenger_count < self.Lift.capacity:
+                self.current_floor = request.start_floor
+                print(
+                    f" Elevator stopping at floor {self.current_floor} - Picking up passenger for floor {request.destination_floor}")
+                current_passenger_count += 1  # Add the passenger to the lift
+                self.passenger_destinations[request.destination_floor] += 1
+            else:
+                # If lift is full, store the passenger to retry later
+                skipped_passengers_up.append(request)
+                print(f" Elevator full, can't pick up passenger at floor {request.start_floor} - Skipping for now")
+                break  # Stop picking up more passengers if the lift is full
 
-            # Move toward destination floors in order
-            while self.passenger_destinations:
-                self.current_floor = min(self.passenger_destinations)
-                print(f" Elevator stopping at floor {self.current_floor} - Dropping off passenger")
-                self.passenger_destinations.remove(self.current_floor)
+        # Drop passengers at their destination floors (grouped)
+        while self.passenger_destinations:
+            next_floor = min(self.passenger_destinations.keys())
+            self.current_floor = next_floor
+            print(
+                f" Elevator stopping at floor {self.current_floor} - Dropping off {self.passenger_destinations[next_floor]} passengers")
+            current_passenger_count -= self.passenger_destinations[next_floor]  # Remove passengers from the lift
+            del self.passenger_destinations[next_floor]
 
         # Move to the top floor before reversing direction
         while self.current_floor < highest_floor:
             self.current_floor += 1
             print(f" Elevator passing floor {self.current_floor}")
 
+        # Re-enqueue skipped passengers
+        while skipped_passengers_up:
+            passenger = skipped_passengers_up.pop(0)
+            self.up_queue.enqueue(passenger)  # Re-add the passengers back to the queue
+            print(f" Re-enqueueing skipped passenger for floor {passenger.destination_floor}")
+
         # Process DOWN direction
-        print("\n Moving DOWN:")
-        while self.down_queue:
-            request = self.down_queue.popleft()
-            pickup_floor, destination = request
-            self.current_floor = pickup_floor
-            print(f" Elevator stopping at floor {pickup_floor} - Picking up passenger for floor {destination}")
+        print("\nMoving DOWN:")
+        while self.down_queue.peek():
+            request = self.down_queue.dequeue()
 
-            # Add passenger's destination to queue
-            self.passenger_destinations.append(destination)
+            # Check if there's enough space for the passenger
+            if current_passenger_count < self.Lift.capacity:
+                self.current_floor = request.start_floor
+                print(
+                    f" Elevator stopping at floor {self.current_floor} - Picking up passenger for floor {request.destination_floor}")
+                current_passenger_count += 1  # Add the passenger to the lift
+                self.passenger_destinations[request.destination_floor] += 1
+            else:
+                # If lift is full, store the passenger to retry later
+                skipped_passengers_down.append(request)
+                print(f" Elevator full, can't pick up passenger at floor {request.start_floor} - Skipping for now")
+                break  # Stop picking up more passengers if the lift is full
 
-            # Move toward destination floors in order
-            while self.passenger_destinations:
-                self.current_floor = max(self.passenger_destinations)
-                print(f" Elevator stopping at floor {self.current_floor} - Dropping off passenger")
-                self.passenger_destinations.remove(self.current_floor)
+        # Drop passengers at their destination floors (grouped)
+        while self.passenger_destinations:
+            next_floor = max(self.passenger_destinations.keys())
+            self.current_floor = next_floor
+            print(
+                f" Elevator stopping at floor {self.current_floor} - Dropping off {self.passenger_destinations[next_floor]} passengers")
+            current_passenger_count -= self.passenger_destinations[next_floor]  # Remove passengers from the lift
+            del self.passenger_destinations[next_floor]
 
         # Move to the bottom floor before reversing again
         while self.current_floor > lowest_floor:
             self.current_floor -= 1
             print(f" Elevator passing floor {self.current_floor}")
+
+        # Re-enqueue skipped passengers
+        while skipped_passengers_down:
+            passenger = skipped_passengers_down.pop(0)
+            self.down_queue.enqueue(passenger)  # Re-add the passengers back to the queue
+            print(f" Re-enqueueing skipped passenger for floor {passenger.destination_floor}")
 
 def read_input_file(filename):
     """ Reads input file and extracts elevator configurations """
@@ -142,7 +171,9 @@ def main():
     elevator = Elevator(floors, capacity)
 
     for floor, destinations in requests.items():
-        elevator.add_request(floor, destinations)
+        for destination in destinations:
+            request = Request(floor, destination)
+            elevator.add_request(request)
 
     print("\n Processing requests using SCAN algorithm:")
     elevator.scan_algorithm()
