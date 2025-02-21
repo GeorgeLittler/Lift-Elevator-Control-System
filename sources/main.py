@@ -1,66 +1,60 @@
-# This is how the main simulation may work
-
 # Import each algorithm
 from SCAN import SCAN
 from LOOK import LOOK
 from MYLIFT import MYLIFT
 
-# Import helper functions - the first returns the total floors and capacity, and the second returns the requests data
+# Import helper functions - the first returns total floors and capacity, and the second returns the request data
 from check_floors_and_capacity import check_floors_and_capacity
 from validate_requests import validate_requests
 
-# Defines constants to be used in each algorithm
-TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS = 2
-TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT = 4
 
-'''
-Below we are testing each of the 3 algorithms on each of the 3 input JSON files (subject to change). Each algorithm 
-should return an integer (in seconds), which represents how long it takes for the algorithm to complete every request. 
-These integers can then be used to compare and visualise the performance of each algorithm against the others by using
-graphs/charts.
-'''
+def run_simulation(input_file_path):
+    """
+    Runs each of the 3 algorithms on the given input file and returns the time it took to complete all requests.
+    """
+    # Defines constants used in each algorithm
+    TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS = 2
+    TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT = 4
 
-# This is defining the filepath to the first input file
-input1_file_path = "../results/data/input1.json"
+    # Get total floors, capacity, and requests
+    total_floors_and_capacity = check_floors_and_capacity(input_file_path, dataset_index=0)
+    requests = validate_requests(input_file_path, dataset_index=0)
 
-SCAN1 = SCAN(check_floors_and_capacity(input1_file_path, dataset_index=0),
-             validate_requests(input1_file_path, dataset_index=0),
-             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    # Run the algorithms
+    scan_time = SCAN(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    look_time = LOOK(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    mylift_time = MYLIFT(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
 
-LOOK1 = LOOK(check_floors_and_capacity(input1_file_path, dataset_index=0),
-             validate_requests(input1_file_path, dataset_index=0),
-             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
-
-MYLIFT1 = MYLIFT(check_floors_and_capacity(input1_file_path, dataset_index=0),
-                validate_requests(input1_file_path, dataset_index=0),
-                TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    return scan_time, look_time, mylift_time
 
 
-input2_file_path = "../results/data/input2.json"
+def main():
+    # List containing each of the input file paths
+    input_files = [
+        "../results/data/input1.json",
+        "../results/data/input2.json",
+        "../results/data/input3.json"
+    ]
 
-SCAN2 = SCAN(check_floors_and_capacity(input2_file_path, dataset_index=0),
-             validate_requests(input2_file_path, dataset_index=0),
-             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    # Define results dictionary which will hold times for each algorithm for each input file
+    results = {}
 
-LOOK2 = LOOK(check_floors_and_capacity(input2_file_path, dataset_index=0),
-             validate_requests(input2_file_path, dataset_index=0),
-             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    for i, file_path in enumerate(input_files, start=1):
+        scan_time, look_time, mylift_time = run_simulation(file_path)
+        results[f"input{i}"] = {
+            "SCAN": scan_time,
+            "LOOK": look_time,
+            "MYLIFT": mylift_time
+        }
 
-MYLIFT2 = MYLIFT(check_floors_and_capacity(input2_file_path, dataset_index=0),
-                validate_requests(input2_file_path, dataset_index=0),
-                TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    # Print results
+    for input_file, times in results.items():
+        print(f"\nResults for {input_file}:")
+        for algorithm, time in times.items():
+            print(f"  {algorithm}: {time} seconds")
+
+    return results
 
 
-input3_file_path = "../results/data/input3.json"
-
-SCAN3 = SCAN(check_floors_and_capacity(input3_file_path, dataset_index=0),
-             validate_requests(input3_file_path, dataset_index=0),
-             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
-
-LOOK3 = LOOK(check_floors_and_capacity(input3_file_path, dataset_index=0),
-             validate_requests(input3_file_path, dataset_index=0),
-             TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
-
-MYLIFT3 = MYLIFT(check_floors_and_capacity(input3_file_path, dataset_index=0),
-                validate_requests(input3_file_path, dataset_index=0),
-                TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+if __name__ == "__main__":
+    main()
