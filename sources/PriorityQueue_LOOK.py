@@ -1,6 +1,6 @@
 from Request import Request
 from Lift import Lift
-class PriorityQueue:
+class PriorityQueue_LOOK:
     def __init__(self, lift_instance: Lift):
         self.lift = lift_instance
         self.Active_Queue: list[Request] = [] 
@@ -98,8 +98,9 @@ class PriorityQueue:
             self.Active_Queue.remove(request)
             print(f"✅ Request {request.start_floor}->{request.destination_floor} completed. Removed from Active Queue.")
 
+
     # ✅ **Rebuild MinHeap after modification**
-        if self.lift.lift_direction == "positive" and self.Active_Queue:
+        if self.lift.lift_direction == "positive" :
             remaining_start_floors = {req.start_floor for req in self.Active_Queue}
             remaining_dest_floors = {req.destination_floor for req in self.Active_Queue}
             self.MinHeap_Queue = sorted(remaining_start_floors | remaining_dest_floors)
@@ -112,12 +113,12 @@ class PriorityQueue:
             if self.Active_Queue:
                 self.lift.lift_direction = self.Active_Queue[0].request_direction()
                 print(f"🚦 Lift direction switched to {self.lift.lift_direction}")
-
+                #WHAT IF THE DIRECTIN WAS SAME HOWEVER WE NEED TO COLLECT THEM FROM DOWN
             # ✅ **Now build MaxHeap after direction switch**
-                if self.lift.lift_direction == "negative":
-                    remaining_start_floors = {req.start_floor for req in self.Active_Queue}
-                    remaining_dest_floors = {req.destination_floor for req in self.Active_Queue}
-                    self.MaxHeap_Queue = sorted(remaining_start_floors | remaining_dest_floors, reverse=True)
+        if self.lift.lift_direction == "negative":
+            remaining_start_floors = {req.start_floor for req in self.Active_Queue}
+            remaining_dest_floors = {req.destination_floor for req in self.Active_Queue}
+            self.MaxHeap_Queue = sorted(remaining_start_floors | remaining_dest_floors, reverse=True)
 
     # ✅ **Print MinHeap and MaxHeap only after modification**
         print(f"📌 Updated MinHeap Queue: {self.MinHeap_Queue}")
