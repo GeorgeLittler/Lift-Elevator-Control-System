@@ -1,7 +1,7 @@
 # Import each algorithm
-from SCAN import SCAN
-from LOOK import LOOK
-from MYLIFT import MYLIFT
+'''from SCAN import SCAN
+from LOOK import LOOK'''
+from MyLift import MyLift
 
 from Request import Request
 
@@ -29,8 +29,9 @@ def run_simulation(input_file_path):
             requests.append(Request(start_floor, destination_floor))
 
     # Run SCAN and LOOK algorithms
-    scan_time = SCAN(total_floors, max_capacity, requests_data, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    '''scan_time = SCAN(total_floors, max_capacity, requests_data, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
     look_time = LOOK(total_floors, max_capacity, requests_data, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    '''
 
     # Run MyLift algorithm
     mylift = MyLift(total_floors, max_capacity, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
@@ -38,9 +39,9 @@ def run_simulation(input_file_path):
     for request in requests:
         mylift.add_request(request)  # Add each request to MyLift's queue
 
-    mylift_time = mylift.process_requests()
+    mylift_time = mylift.run()
 
-    return scan_time, look_time, mylift_time
+    return mylift_time
 
 
 def main():
@@ -55,10 +56,8 @@ def main():
     results = {}
 
     for i, file_path in enumerate(input_files, start=1):
-        scan_time, look_time, mylift_time = run_simulation(file_path)
+        mylift_time = run_simulation(file_path)
         results[f"input{i}"] = {
-            "SCAN": scan_time,
-            "LOOK": look_time,
             "MYLIFT": mylift_time
         }
 
