@@ -54,7 +54,7 @@ class MyLift(Lift1):
                 return True
         return False
     
-    def check_if_up_requests_above_floor(self):
+    '''def check_if_up_requests_above_floor(self):
         for floor in self.up_requests:  
             if self.up_requests[floor] and self.up_requests[floor][0].start_floor > self.current_floor: 
                 return True
@@ -64,7 +64,7 @@ class MyLift(Lift1):
         for floor in self.down_requests:
             if self.down_requests[floor] and self.down_requests[floor][0].start_floor < self.current_floor:
                 return True
-        return False
+        return False'''
     
     def check_if_active_requests(self):
         if len(self.active_requests) != 0:
@@ -164,25 +164,12 @@ class MyLift(Lift1):
     
     def run(self):
         while self.check_if_up_requests() or self.check_if_down_requests() or self.check_if_active_requests():
-            print(f"UP: {self.check_if_up_requests()}, DOWN: {self.check_if_down_requests()}, ACTIVE: {self.check_if_active_requests()}")
             picked_up_passengers = self.pick_up_passengers()
             self.move_lift()
             self.drop_off_passengers(picked_up_passengers)
 
-            print(f"Up above: {self.check_if_up_requests_above_floor()}")
-            print(f"Down below: {self.check_if_down_requests_below_floor()}")
-
-            '''if self.direction == "positive" and not self.check_if_up_requests_above_floor() and not self.check_if_active_requests():
-                print(f"AAA: {self.direction}, {self.check_if_up_requests_above_floor()}, {self.check_if_active_requests()}")
-                print("Changing direction from positive to negative. There are no more up requests above this floor.")
-                self.change_lift_direction()
-            elif self.direction == "negative" and not self.check_if_down_requests_below_floor() and not self.check_if_active_requests():
-                print(f"BBB: {self.direction}, {self.check_if_down_requests_below_floor()}, {self.check_if_active_requests()}")
-                print("Changing direction from negative to positive. There are no more down requests below this floor.")
-                self.change_lift_direction()'''
             if self.current_floor == self.start_floor or self.current_floor == self.total_floors:
                 self.change_lift_direction()
-            
 
         return self.time_elapsed
 
@@ -193,12 +180,12 @@ mylift = MyLift(total_floors=8, max_capacity=5)
 
 # Adding requests to the MyLift object
 requests_data = {
-    1: [4, 6],      # Up to 3, 5
+    1: [4, 6, 3, 2],      # Up to 3, 5
     2: [3, 5, 7],         # Down to 1
     3: [8],   # Down to 1, 2, Up to 4
     4: [2, 5],         # Down to 1
     5: [6, 1],         # Up to 6
-    6: [7],         # Down to 3
+    6: [8],         # Down to 3
     7: [4, 2],
     8: [3]
 }
