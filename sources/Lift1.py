@@ -1,4 +1,4 @@
-class Lift:
+class Lift1:
     def __init__(self, total_floors, max_capacity, travel_time=2, enter_exit_time=4):
         self.start_floor = 1
         self.current_floor = self.start_floor
