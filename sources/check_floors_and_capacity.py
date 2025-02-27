@@ -1,9 +1,31 @@
 import json
+import os
 
-# This function checks that total floors and capacity are set to reasonable numbers and updates them if not
 def check_floors_and_capacity(json_filename, dataset_index=0):
-    with open(json_filename, "r") as f:
-        data = json.load(f)
+    """
+    Checks that total floors and capacity are set to reasonable numbers and updates them if not.
+    
+    Args:
+        json_filename (str): Path to the JSON file (relative or absolute).
+        dataset_index (int): Index of the dataset to use (default: 0).
+    
+    Returns:
+        tuple: (total_floors, capacity)
+    
+    Raises:
+        FileNotFoundError: If the JSON file does not exist.
+        ValueError: If the JSON file does not have valid numerical values for total floors and capacity.
+    """
+    # Resolve the relative path to an absolute path
+    json_filename = os.path.abspath(json_filename)
+    print(f"Resolved JSON file path: {json_filename}")  # Debugging
+
+    try:
+        # Open and load the JSON file
+        with open(json_filename, "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Error: JSON file not found at {json_filename}")
 
     # Get the specified dataset (default: first dataset)
     dataset = data[dataset_index]

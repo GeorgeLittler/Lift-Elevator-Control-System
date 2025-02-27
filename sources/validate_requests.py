@@ -1,4 +1,5 @@
 import json
+import os
 from check_floors_and_capacity import check_floors_and_capacity
 
 def validate_requests(json_filename, dataset_index=0):
@@ -38,9 +39,10 @@ def validate_requests(json_filename, dataset_index=0):
     return valid_requests
 
 # Example usage:
-requests = validate_requests("../results/data/input1.json", dataset_index=0)
-print(requests)
+# Resolve the absolute path to the JSON file
+json_path = os.path.abspath("../Lift-Elevator-Control-System/results/data/input1.json")
+print(f"Resolved path: {json_path}")
 
-"""Data format:
-{1: [4, 6], 2: [3, 5, 7], 3: [8], 4: [2, 5], 5: [6, 1], 6: [7], 7: [4, 2], 8: [3]}
-"""
+# Validate requests
+requests = validate_requests(json_path, dataset_index=0)
+print(requests)

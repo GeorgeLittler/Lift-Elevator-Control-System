@@ -42,7 +42,9 @@ class PriorityQueue_SCAN(PriorityQueue_LOOK):
         for request in completed_requests:
             self.Active_Queue.remove(request)
             print(f"✅ Request {request.start_floor}->{request.destination_floor} completed. Removed from Active Queue.")
-
+        
+        # ✅ Update time_elapsed for passenger exit
+        self.lift.time_elapsed += len(completed_requests) * self.lift.exit_time  # UPDATED: Use self.lift.exit_time
         # ✅ Rebuild MinHeap and MaxHeap after modification
         if self.lift.lift_direction == "positive":
             self.MinHeap_Queue = sorted(
