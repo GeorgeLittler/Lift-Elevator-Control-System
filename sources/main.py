@@ -23,6 +23,7 @@ def run_simulation(input_file_path):
     # Load data
     total_floors, max_capacity= check_floors_and_capacity(input_file_path, dataset_index=0)  # (floors, capacity)
     requests_data = validate_requests(input_file_path, dataset_index=0)  # List of requests
+    
 
     requests = []
     for start_floor, destination_floors in requests_data.items():
@@ -30,8 +31,8 @@ def run_simulation(input_file_path):
             requests.append(Request(start_floor, destination_floor))
 
     # Run the algorithms
-    scan_time = SCAN(total_floors, max_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
-    look_time = LOOK(total_floors, max_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    scan_time = SCAN(total_floors, max_capacity, requests_data, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).run()
+    look_time = LOOK(total_floors, max_capacity, requests_data, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).run()
     
     mylift = MyLift(total_floors, max_capacity, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
     
