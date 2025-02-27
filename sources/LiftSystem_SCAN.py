@@ -75,12 +75,7 @@ class LiftSystem_SCAN(LiftSystem_LOOK):
                     return
 
             # Get the next stop based on direction
-            if self.Lift.lift_direction == "positive":
-                self.priority_queue.MinHeap()
-                next_stop = min(self.priority_queue.MinHeap_Queue, default=None)
-            else:
-                self.priority_queue.MaxHeap()
-                next_stop = max(self.priority_queue.MaxHeap_Queue, default=None)
+            next_stop = self.priority_queue.get_next_stop()
 
             if next_stop is None:
                 print("❌ No valid next stop, but there are remaining requests. Checking again...")
@@ -102,7 +97,6 @@ class LiftSystem_SCAN(LiftSystem_LOOK):
                 self.priority_queue.Loading_Waiting_to_Active()
 
         print("✅ All SCAN requests processed. Lift stopping.")
-
 
 class SCAN:
     def __init__(self, total_floors_and_capacity, requests, time_between_floors, time_to_exit):

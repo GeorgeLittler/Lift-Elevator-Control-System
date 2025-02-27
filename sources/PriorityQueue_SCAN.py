@@ -9,29 +9,26 @@ class PriorityQueue_SCAN(PriorityQueue_LOOK):
 
     def get_next_stop(self):
         if self.lift.lift_direction == "positive":
-            # Ensure the lift moves to the top floor before switching direction
+            # If there are requests in the current direction, move to the next stop
             if self.Active_Queue or self.MinHeap_Queue:
                 next_stop = min([floor for floor in self.MinHeap_Queue if floor > self.lift.current_floor], default=None)
                 if next_stop is not None:
                     return next_stop
-        # If no more requests in the current direction, move to the top floor before switching
+            # If no more requests in the current direction, move to the top floor
             if self.lift.current_floor < self.total_floors:
                 return self.total_floors
-
         else:
-            # Ensure the lift moves to the bottom before switching direction
+            # If there are requests in the current direction, move to the next stop
             if self.Active_Queue or self.MaxHeap_Queue:
                 next_stop = max([floor for floor in self.MaxHeap_Queue if floor < self.lift.current_floor], default=None)
                 if next_stop is not None:
                     return next_stop
-            # If no more requests in the current direction, move to floor 0 before switching
+            # If no more requests in the current direction, move to the bottom floor
             if self.lift.current_floor > 0:
                 return 0
-
         return None  # No more stops
     
     def Removing_requests_from_Active_and_MaxMinHeap(self):
-    
         # ✅ Remove all occurrences of the current floor from MinHeap and MaxHeap
         self.MinHeap_Queue = [floor for floor in self.MinHeap_Queue if floor != self.lift.current_floor]
         self.MaxHeap_Queue = [floor for floor in self.MaxHeap_Queue if floor != self.lift.current_floor]
@@ -42,14 +39,15 @@ class PriorityQueue_SCAN(PriorityQueue_LOOK):
         for request in completed_requests:
             self.Active_Queue.remove(request)
             print(f"✅ Request {request.start_floor}->{request.destination_floor} completed. Removed from Active Queue.")
-        
+    
         # ✅ Update time_elapsed for passenger exit
         self.lift.time_elapsed += len(completed_requests) * self.lift.exit_time  # UPDATED: Use self.lift.exit_time
+
         # ✅ Rebuild MinHeap and MaxHeap after modification
         if self.lift.lift_direction == "positive":
             self.MinHeap_Queue = sorted(
             {req.start_floor for req in self.Active_Queue} | {req.destination_floor for req in self.Active_Queue}
-            )
+        )
         elif self.lift.lift_direction == "negative":
             self.MaxHeap_Queue = sorted(
             {req.start_floor for req in self.Active_Queue} | {req.destination_floor for req in self.Active_Queue},

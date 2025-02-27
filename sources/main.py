@@ -23,11 +23,11 @@ def run_simulation(input_file_path):
     requests = validate_requests(input_file_path, dataset_index=0)
 
     # Run the algorithms
-    #scan_time = SCAN(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).get_total_time()
+    scan_time = SCAN(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).get_total_time()
     look_time = LOOK(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).get_total_time()
     # mylift_time = MYLIFT(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).get_total_time()
 
-    return  look_time  # , mylift_time scan_time#,
+    return scan_time , look_time  # , mylift_time scan_time#,
 
 
 def main():
@@ -50,9 +50,9 @@ def main():
     results = {}
 
     for i, file_path in enumerate(input_files, start=1):
-        look_time = run_simulation(file_path)  # , mylift_time,, look_time
+        scan_time, look_time = run_simulation(file_path)  # , mylift_time,, look_time
         results[f"input{i}"] = {
-            #"SCAN": scan_time,
+            "SCAN": scan_time,
             "LOOK": look_time,
             # "MYLIFT": mylift_time
         }

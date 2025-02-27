@@ -76,12 +76,10 @@ class LiftSystem_LOOK:
             # Get the next stop based on direction
             if self.Lift.lift_direction == "positive":
                 self.priority_queue.MinHeap()
-                next_stop = min(floor for floor in self.priority_queue.MinHeap_Queue)
-                
-                    
+                next_stop = min([floor for floor in self.priority_queue.MinHeap_Queue if floor > self.Lift.current_floor], default=None)
             else:
                 self.priority_queue.MaxHeap()
-                next_stop = max(floor for floor in self.priority_queue.MaxHeap_Queue )
+                next_stop = max([floor for floor in self.priority_queue.MaxHeap_Queue if floor < self.Lift.current_floor], default=None)
 
             if next_stop is None:
                 print("❌ No valid next stop, but there are remaining requests. Checking again...")
@@ -98,16 +96,6 @@ class LiftSystem_LOOK:
 
             print(f"After Removing: MinHeap Queue: {self.priority_queue.MinHeap_Queue}")
             print(f"After Removing: MaxHeap Queue: {self.priority_queue.MaxHeap_Queue}")
-
-            # Ensure that downward requests are fully processed
-            #while self.Lift.lift_direction == "negative" and self.priority_queue.MaxHeap_Queue:
-               # next_downward_stop = max(self.priority_queue.MaxHeap_Queue, default=None)
-                #if next_downward_stop is None:
-                #    break
-
-                #print(f"🚀 Lift continuing downward to {next_downward_stop}...")
-                #self.Lift.current_floor = next_downward_stop
-                #self.priority_queue.Removing_requests_from_Active_and_MaxMinHeap()
 
             # If Active Queue is empty but there are still waiting requests, load them
             if not self.priority_queue.Active_Queue and self.priority_queue.Waiting_Queue:

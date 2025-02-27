@@ -106,26 +106,14 @@ class PriorityQueue_LOOK:
         if self.lift.lift_direction == "positive" and not self.MinHeap_Queue:
             print("🔄 Changing direction as no more requests in upward direction.")
             self.lift.lift_direction = "negative"
-    
-            # 🚀 Ensure all waiting downward requests are loaded
             self.Loading_Waiting_to_Active()
             self.MaxHeap()
-
-            if not self.MaxHeap_Queue and not self.Active_Queue:
-                print("🚫 No downward requests left. Stopping the lift.")
-                return
 
         elif self.lift.lift_direction == "negative" and not self.MaxHeap_Queue:
             print("🔄 Changing direction as no more requests in downward direction.")
             self.lift.lift_direction = "positive"
-
-            # 🚀 Ensure all waiting upward requests are loaded
             self.Loading_Waiting_to_Active()
             self.MinHeap()
-
-            if not self.MinHeap_Queue and not self.Active_Queue:
-                print("🚫 No upward requests left. Stopping the lift.")
-                return
 
         print(f"📌 Updated MinHeap Queue: {self.MinHeap_Queue}")
         print(f"📌 Updated MaxHeap Queue: {self.MaxHeap_Queue}")
