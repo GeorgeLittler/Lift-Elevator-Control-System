@@ -3,6 +3,7 @@ class Request:
     def __init__(self, start_floor, destination_floor):
         self.start_floor = start_floor
         self.destination_floor = destination_floor
+
     def request_direction(self):
         if self.start_floor>self.destination_floor:
             direction1="negative"
@@ -10,3 +11,6 @@ class Request:
         if self.start_floor<self.destination_floor:
             direction1="positive"
             return direction1
+        
+    def __repr__(self):
+        return f"Request(start_floor={self.start_floor}, destination_floor={self.destination_floor})"

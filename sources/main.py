@@ -3,7 +3,9 @@ import os
 # Import each algorithm
 from LiftSystem_SCAN import SCAN
 from LiftSystem_LOOK import LOOK
-# from MYLIFT import MYLIFT
+from MyLift import MyLift
+
+from Request import Request
 
 # Import helper functions - the first returns total floors and capacity, and the second returns the request data
 from check_floors_and_capacity import check_floors_and_capacity
@@ -18,16 +20,27 @@ def run_simulation(input_file_path):
     TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS = 2
     TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT = 4
 
-    # Get total floors, capacity, and requests
-    total_floors_and_capacity = check_floors_and_capacity(input_file_path, dataset_index=0)
-    requests = validate_requests(input_file_path, dataset_index=0)
+    # Load data
+    total_floors, max_capacity= check_floors_and_capacity(input_file_path, dataset_index=0)  # (floors, capacity)
+    requests_data = validate_requests(input_file_path, dataset_index=0)  # List of requests
+
+    requests = []
+    for start_floor, destination_floors in requests_data.items():
+        for destination_floor in destination_floors:
+            requests.append(Request(start_floor, destination_floor))
 
     # Run the algorithms
-    scan_time = SCAN(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).get_total_time()
-    look_time = LOOK(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).get_total_time()
-    # mylift_time = MYLIFT(total_floors_and_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).get_total_time()
+    scan_time = SCAN(total_floors, max_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    look_time = LOOK(total_floors, max_capacity, requests, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    
+    mylift = MyLift(total_floors, max_capacity, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
+    
+    for request in requests:
+        mylift.add_request(request)  # Add each request to MyLift's queue
 
-    return scan_time , look_time  # , mylift_time scan_time#,
+    mylift_time = mylift.run()
+
+    return scan_time, look_time, mylift_time
 
 
 def main():
@@ -50,11 +63,11 @@ def main():
     results = {}
 
     for i, file_path in enumerate(input_files, start=1):
-        scan_time, look_time = run_simulation(file_path)  # , mylift_time,, look_time
+        scan_time, look_time, mylift_time = run_simulation(file_path)
         results[f"input{i}"] = {
             "SCAN": scan_time,
             "LOOK": look_time,
-            # "MYLIFT": mylift_time
+            "MYLIFT": mylift_time
         }
 
     # Print results
