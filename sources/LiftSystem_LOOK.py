@@ -111,9 +111,9 @@ class LiftSystem_LOOK:
         self.pick_up_passengers(request)  # Add request to queue
 
 class LOOK:
-    def __init__(self, total_floors_and_capacity, requests, time_between_floors, time_to_exit):
-        self.total_floors = total_floors_and_capacity[0]
-        self.capacity = total_floors_and_capacity[1]
+    def __init__(self, total_floors, max_capacity, requests, time_between_floors, time_to_exit):
+        self.total_floors = total_floors
+        self.capacity = max_capacity
         self.requests = requests
         self.time_between_floors = time_between_floors
         self.time_to_exit = time_to_exit
