@@ -119,9 +119,6 @@ class SCAN:
         # Run the simulation and return the total time elapsed
         return lift_system.run()
 
-    def get_total_time(self):
-        return self.calculate_total_time()
-
     def run(self):
         return self.calculate_total_time()
                      
