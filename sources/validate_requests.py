@@ -38,11 +38,3 @@ def validate_requests(json_filename, dataset_index=0):
 
     return valid_requests
 
-# Example usage:
-# Resolve the absolute path to the JSON file
-json_path = os.path.abspath("../Lift-Elevator-Control-System/results/data/input1.json")
-print(f"Resolved path: {json_path}")
-
-# Validate requests
-requests = validate_requests(json_path, dataset_index=0)
-print(requests)
