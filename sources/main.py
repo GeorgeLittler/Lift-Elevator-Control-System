@@ -40,7 +40,13 @@ def run_simulation(input_file_path):#runs each of the 3 algorithms on the given 
     mylift = MyLift(total_floors, max_capacity, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
     
     for request in requests:
+<<<<<<< HEAD
         mylift.add_request(request)  #add each request to MyLift's queue
+=======
+        mylift.add_request(request)
+
+    mylift.sort_requests()
+>>>>>>> 6e22badd636515ca8f54fd0298044ddce9ff7e0e
 
     mylift_time = mylift.run()
 
@@ -114,22 +120,31 @@ def write_performance_to_csv(results):
 
 
 def main():
+<<<<<<< HEAD
     #define the base directory which is project root
     BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+=======
+    # Define the base directory (project root)
+    project_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+>>>>>>> 6e22badd636515ca8f54fd0298044ddce9ff7e0e
 
     #list containing each of the input file paths
     input_files = [
-        os.path.join(BASE_DIR, "results/data/input1.json"),
-        os.path.join(BASE_DIR, "results/data/input2.json"),
-        os.path.join(BASE_DIR, "results/data/input3.json")
+        os.path.join(project_directory, "results/data/input1.json"),
+        os.path.join(project_directory, "results/data/input2.json"),
+        os.path.join(project_directory, "results/data/input3.json")
     ]
 
+<<<<<<< HEAD
     #print resolved paths for debugging
     print("Resolved input file paths:")
     for file_path in input_files:
         print(file_path)
 
     #define results dictionary which will hold times for each algorithm for each input file
+=======
+    # Define results dictionary which will hold times for each algorithm for each input file
+>>>>>>> 6e22badd636515ca8f54fd0298044ddce9ff7e0e
     results = {}
 
     for i, file_path in enumerate(input_files, start=1):
@@ -151,7 +166,6 @@ def main():
     write_performance_to_csv(results)
 
     return results
-
 
 if __name__ == "__main__":
     main()
