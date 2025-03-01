@@ -1,0 +1,4 @@
+Algorithm,Avg_Wait_Time,Requests_Served,Efficiency_Score
+SCAN,146,3,0.02054794520547945
+LOOK,94,3,0.031914893617021274
+MYLIFT,80,3,0.0375

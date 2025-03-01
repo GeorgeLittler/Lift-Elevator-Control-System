@@ -6,3 +6,5 @@ class Lift:
         self.travel_time = travel_time
         self.exit_time = exit_time
         self.time_elapsed = 0
+        self.visited_floors = set()  # Track visited floors
+
