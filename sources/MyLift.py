@@ -24,8 +24,6 @@ class MyLift(Lift1):
         elif direction == "negative":
             self.down_requests[request.start_floor].append(request)
         
-        self.sort_requests()
-
 
     def sort_requests(self):
         """Sorts the requests in both up_requests and down_requests."""
@@ -54,9 +52,19 @@ class MyLift(Lift1):
                 return True
         return False
     
-    '''def check_if_up_requests_above_floor(self):
+    def check_if_up_requests_at_current_floor(self):
+        if self.up_requests[self.current_floor]:
+            return True
+        return False
+    
+    def check_if_down_requests_at_current_floor(self):
+        if self.down_requests[self.current_floor]:
+            return True
+        return False
+    
+    def check_if_up_requests_above_floor(self):
         for floor in self.up_requests:  
-            if self.up_requests[floor] and self.up_requests[floor][0].start_floor > self.current_floor: 
+            if self.up_requests[floor] and self.up_requests[floor][0].start_floor > self.current_floor:
                 return True
         return False
     
@@ -64,12 +72,24 @@ class MyLift(Lift1):
         for floor in self.down_requests:
             if self.down_requests[floor] and self.down_requests[floor][0].start_floor < self.current_floor:
                 return True
-        return False'''
+        return False
     
     def check_if_active_requests(self):
         if len(self.active_requests) != 0:
             return True
         return False
+
+    def is_current_floor_at_or_below_lowest_up_request(self):
+        for floor in sorted(self.up_requests.keys()):  
+            if self.up_requests[floor]:  
+                return self.current_floor <= floor
+        return None  
+
+    def is_current_floor_at_or_below_highest_down_request(self):
+        for floor in sorted(self.down_requests.keys(), reverse=True):  
+            if self.down_requests[floor]:  
+                return self.current_floor >= floor
+        return None
 
     def pick_up_up_passengers(self):
         enter_time_incremented = False
@@ -164,12 +184,28 @@ class MyLift(Lift1):
     
     def run(self):
         while self.check_if_up_requests() or self.check_if_down_requests() or self.check_if_active_requests():
+            print(f"UP: {self.up_requests}")
+            print(f"DOWN: {self.down_requests}")
             picked_up_passengers = self.pick_up_passengers()
             self.move_lift()
             self.drop_off_passengers(picked_up_passengers)
 
-            if self.current_floor == self.start_floor or self.current_floor == self.total_floors:
-                self.change_lift_direction()
+            if not self.check_if_active_requests():
+                if self.direction == "positive":
+                    if self.check_if_up_requests(): 
+                        if not self.check_if_up_requests_at_current_floor() and not self.check_if_up_requests_above_floor():
+                            self.change_lift_direction()
+                    else:
+                        if self.is_current_floor_at_or_below_highest_down_request():
+                            self.change_lift_direction()
+
+                elif self.direction == "negative":
+                    if self.check_if_down_requests():
+                        if not self.check_if_down_requests_at_current_floor() and not self.check_if_down_requests_below_floor():
+                            self.change_lift_direction()
+                    else:
+                        if self.is_current_floor_at_or_below_lowest_up_request():
+                            self.change_lift_direction()
 
         return self.time_elapsed
 
@@ -184,7 +220,7 @@ requests_data = {
     2: [3, 5, 7],         # Down to 1
     3: [8],   # Down to 1, 2, Up to 4
     4: [2, 5],         # Down to 1
-    5: [6, 1],         # Up to 6
+    5: [6, 4],         # Up to 6
     6: [8],         # Down to 3
     7: [4, 2],
     8: [3]
@@ -198,6 +234,8 @@ for start_floor, destination_floors in requests_data.items():
 # Adding requests to the MyLift object
 for request in requests:
     mylift.add_request(request)
+
+mylift.sort_requests()
 
 mylift.display_requests()
 

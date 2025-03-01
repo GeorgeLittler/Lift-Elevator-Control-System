@@ -37,7 +37,9 @@ def run_simulation(input_file_path):
     mylift = MyLift(total_floors, max_capacity, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT)
     
     for request in requests:
-        mylift.add_request(request)  # Add each request to MyLift's queue
+        mylift.add_request(request)
+
+    mylift.sort_requests()
 
     mylift_time = mylift.run()
 
@@ -46,19 +48,14 @@ def run_simulation(input_file_path):
 
 def main():
     # Define the base directory (project root)
-    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    project_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
     # List containing each of the input file paths
     input_files = [
-        os.path.join(BASE_DIR, "results/data/input1.json"),
-        os.path.join(BASE_DIR, "results/data/input2.json"),
-        os.path.join(BASE_DIR, "results/data/input3.json")
+        os.path.join(project_directory, "results/data/input1.json"),
+        os.path.join(project_directory, "results/data/input2.json"),
+        os.path.join(project_directory, "results/data/input3.json")
     ]
-
-    # Print resolved paths for debugging
-    print("Resolved input file paths:")
-    for file_path in input_files:
-        print(file_path)
 
     # Define results dictionary which will hold times for each algorithm for each input file
     results = {}
@@ -78,7 +75,6 @@ def main():
             print(f"  {algorithm}: {time} seconds")
 
     return results
-
 
 if __name__ == "__main__":
     main()
