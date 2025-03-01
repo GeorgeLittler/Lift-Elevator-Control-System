@@ -23,11 +23,15 @@ def run_simulation(input_file_path):#runs each of the 3 algorithms on the given 
     total_floors, max_capacity= check_floors_and_capacity(input_file_path, dataset_index=0) #floors, capacity
     requests_data = validate_requests(input_file_path, dataset_index=0) #list of requests
     
-
+    # new total requests
+    total_requests = sum(len(destinations) for destinations in requests_data.values())
+    
     requests = []
     for start_floor, destination_floors in requests_data.items():
         for destination_floor in destination_floors:
             requests.append(Request(start_floor, destination_floor))
+
+    total_requests = len(requests)
 
     #run the algorithms
     scan_time = SCAN(total_floors, max_capacity, requests_data, TIME_TAKEN_FOR_LIFT_TO_TRAVEL_BETWEEN_FLOORS, TIME_TAKEN_FOR_PEOPLE_TO_EXIT_LIFT).calculate_total_time()
@@ -40,46 +44,60 @@ def run_simulation(input_file_path):#runs each of the 3 algorithms on the given 
 
     mylift_time = mylift.run()
 
-    return scan_time, look_time, mylift_time
+    return scan_time, look_time, mylift_time, total_requests
 
 
-def write_performance_to_csv(results):#writes the performance results to CSV files and creates both individual input CSVs and the aggregate average CSV.
+def write_performance_to_csv(results):
     algorithms = ["SCAN", "LOOK", "MYLIFT"]
-    
-    #gather individual input data
+
+    # Write individual input results
     for i, (input_file, times) in enumerate(results.items(), start=1):
         input_file_name = f"lift_performance_input{i}.csv"
-        print(f"Writing to {input_file_name}")  #debugging print for file path
+        print(f"Writing to {input_file_name}")
         with open(input_file_name, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["Algorithm", "Avg_Wait_Time", "Requests_Served", "Efficiency_Score"])
-            for algorithm, time in times.items():
-                #placeholder calculations for Avg_Wait_Time, Requests_Served, and Efficiency_Score
-                avg_wait_time = time  #example placeholder; should be refined based on actual data
-                requests_served = len(times)  #example placeholder; should be refined based on actual requests processed
-                efficiency_score = requests_served / avg_wait_time  #example formula; should be refined
+            
+            for algorithm in algorithms:
+                algorithm_data = times.get(algorithm, {})
+                avg_wait_time = algorithm_data.get("time", 0)  # Extract time
+                requests_served = algorithm_data.get("requests", 0)  # Extract requests
+
+                if not isinstance(avg_wait_time, (int, float)):
+                    avg_wait_time = 0  # Fallback for safety
+                
+                efficiency_score = requests_served / avg_wait_time if avg_wait_time > 0 else 0
+                
                 writer.writerow([algorithm, avg_wait_time, requests_served, efficiency_score])
 
-    #prepare aggregate/average data
+    # Compute average results across inputs
     avg_wait_times = {algorithm: 0 for algorithm in algorithms}
     avg_requests_served = {algorithm: 0 for algorithm in algorithms}
     avg_efficiency_scores = {algorithm: 0 for algorithm in algorithms}
     
     num_files = len(results)
-    
-    #averages for each algorithm
+
+    # Compute total sums for averaging
     for times in results.values():
         for algorithm in algorithms:
-            avg_wait_times[algorithm] += times[algorithm]  #placeholder, needs refinement
-            avg_requests_served[algorithm] += len(times)  #placeholder, needs refinement
-            avg_efficiency_scores[algorithm] += len(times) / times[algorithm]  #placeholder formula
-    
+            algorithm_data = times.get(algorithm, {})
+            wait_time = algorithm_data.get("time", 0)
+            requests = algorithm_data.get("requests", 0)
+
+            if not isinstance(wait_time, (int, float)):
+                wait_time = 0  
+            
+            avg_wait_times[algorithm] += wait_time
+            avg_requests_served[algorithm] += requests
+            avg_efficiency_scores[algorithm] += (requests / wait_time if wait_time > 0 else 0)
+
+    # Compute actual averages
     for algorithm in algorithms:
         avg_wait_times[algorithm] /= num_files
         avg_requests_served[algorithm] /= num_files
         avg_efficiency_scores[algorithm] /= num_files
 
-    #average data to aggregate CSV
+    # Write aggregate data to `lift_performance.csv`
     with open("lift_performance.csv", mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(["Algorithm", "Avg_Wait_Time", "Requests_Served", "Efficiency_Score"])
@@ -92,6 +110,7 @@ def write_performance_to_csv(results):#writes the performance results to CSV fil
             ])
         
     print("CSV files have been created successfully.")
+
 
 
 def main():
@@ -114,18 +133,18 @@ def main():
     results = {}
 
     for i, file_path in enumerate(input_files, start=1):
-        scan_time, look_time, mylift_time = run_simulation(file_path)
+        scan_time, look_time, mylift_time, total_requests = run_simulation(file_path)
         results[f"input{i}"] = {
-            "SCAN": scan_time,
-            "LOOK": look_time,
-            "MYLIFT": mylift_time
+            "SCAN": {"time": scan_time, "requests": total_requests},
+            "LOOK": {"time": look_time, "requests": total_requests},
+            "MYLIFT": {"time": mylift_time, "requests": total_requests}
         }
 
     #printing results
     for input_file, times in results.items():
         print(f"\nResults for {input_file}:")
-        for algorithm, time in times.items():
-            print(f"  {algorithm}: {time} seconds")
+        for algorithm, data in times.items():
+            print(f"  {algorithm}: {data['time']} seconds, Requests Served: {data['requests']}")
 
 
     #results to CSV files
