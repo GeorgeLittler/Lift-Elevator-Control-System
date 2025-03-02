@@ -1,5 +1,4 @@
 import json
-import os
 from check_floors_and_capacity import check_floors_and_capacity
 
 def validate_requests(json_filename, dataset_index=0):
