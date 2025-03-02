@@ -1,8 +1,8 @@
 from Request import Request
-from Lift1 import Lift1
+from Lift import Lift
 
-class Base_PriorityQueue:
-    def __init__(self, lift_instance: Lift1):
+class BasePriorityQueue:
+    def __init__(self, lift_instance: Lift):
         #initialises the priority queue with a lift instance and empty queues
         self.lift = lift_instance
         self.Active_Queue: list[Request] = []#holds requests currently being processed

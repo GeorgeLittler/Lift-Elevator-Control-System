@@ -1,8 +1,7 @@
-from Lift1 import Lift1
+from Lift import Lift
 
-class MyLift(Lift1):
+class MyLift(Lift):
     def __init__(self, total_floors, max_capacity, travel_time=2, enter_exit_time=4):
-
         # This calls the constructor of the parent class Lift, passing the parameters of Lift to MyLift
         super().__init__(total_floors, max_capacity, travel_time, enter_exit_time)
 
@@ -13,6 +12,8 @@ class MyLift(Lift1):
 
         # This will store the requests of the passengers inside of the lift
         self.active_requests = []
+
+        self.lift_direction = "positive"
 
     # This function adds the requests to up_requests or down_requests based on direction
     def add_request(self, request):
@@ -153,9 +154,9 @@ class MyLift(Lift1):
     def pick_up_passengers(self):
         picked_up_passengers = False
 
-        if self.up_requests[self.current_floor] and self.direction == "positive":
+        if self.up_requests[self.current_floor] and self.lift_direction == "positive":
             picked_up_passengers = self.pick_up_up_passengers()
-        elif self.down_requests[self.current_floor] and self.direction == "negative":
+        elif self.down_requests[self.current_floor] and self.lift_direction == "negative":
             picked_up_passengers = self.pick_up_down_passengers()
 
         print(f"Active requests: {self.active_requests}")
@@ -175,7 +176,7 @@ class MyLift(Lift1):
 
     # This function uses the previous 2 functions to move the lift depending on its direction
     def move_lift(self):
-        if self.direction == "positive":
+        if self.lift_direction == "positive":
             self.move_lift_up()
         else:
             self.move_lift_down()
@@ -206,10 +207,10 @@ class MyLift(Lift1):
 
     # This function changes the lift direction
     def change_lift_direction(self):
-        if self.direction == "positive":
-            self.direction = "negative"
+        if self.lift_direction == "positive":
+            self.lift_direction = "negative"
         else:
-            self.direction = "positive"
+            self.lift_direction = "positive"
 
     # This function is used to run the MyLift algorithm on the requests
     def run(self):
@@ -222,7 +223,7 @@ class MyLift(Lift1):
 
             # This logic is responsible for changing the lift's direction
             if not self.check_if_active_requests():
-                if self.direction == "positive":
+                if self.lift_direction == "positive":
                     if self.check_if_up_requests(): 
                         if not self.check_if_up_requests_at_current_floor() and not self.check_if_up_requests_above_floor():
                             self.change_lift_direction()
@@ -230,7 +231,7 @@ class MyLift(Lift1):
                         if self.is_current_floor_at_or_below_highest_down_request():
                             self.change_lift_direction()
 
-                elif self.direction == "negative":
+                elif self.lift_direction == "negative":
                     if self.check_if_down_requests():
                         if not self.check_if_down_requests_at_current_floor() and not self.check_if_down_requests_below_floor():
                             self.change_lift_direction()

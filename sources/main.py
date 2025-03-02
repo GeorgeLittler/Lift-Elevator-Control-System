@@ -2,8 +2,8 @@ import os
 import csv
 
 #import each algorithm
-from LiftSystem_SCAN import SCAN
-from LiftSystem_LOOK import LOOK
+from LiftSystemSCAN import SCAN
+from LiftSystemLOOK import LOOK
 from MyLift import MyLift
 
 from Request import Request

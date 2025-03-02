@@ -1,9 +1,9 @@
 from Request import Request
-from Lift1 import Lift1
-from Base_PriorityQueue import Base_PriorityQueue
+from Lift import Lift
+from BasePriorityQueue import BasePriorityQueue
 
-class PriorityQueue_LOOK(Base_PriorityQueue):
-    def __init__(self, lift_instance: Lift1):
+class PriorityQueueLOOK(BasePriorityQueue):
+    def __init__(self, lift_instance: Lift):
         super().__init__(lift_instance)  #initialising the base class
         self.just_started = False#flag to check if the lift just started
 

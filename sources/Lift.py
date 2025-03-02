@@ -1,4 +1,4 @@
-class Lift1:
+class Lift:
     def __init__(self, total_floors, max_capacity, travel_time=2, enter_exit_time=4):
         self.start_floor = 1
         self.current_floor = self.start_floor
@@ -10,7 +10,6 @@ class Lift1:
         self.travel_time = travel_time
         self.enter_exit_time = enter_exit_time
         self.time_elapsed = 0
-        self.direction = "positive"
         self.lift_direction = None
         self.visited_floors = set()  # Track visited floors
 

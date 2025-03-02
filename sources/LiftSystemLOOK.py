@@ -1,11 +1,10 @@
-
-from PriorityQueue_LOOK import PriorityQueue_LOOK
-from Lift1 import Lift1
+from PriorityQueueLOOK import PriorityQueueLOOK
+from Lift import Lift
 from Request import Request
-class LiftSystem_LOOK:
+class LiftSystemLOOK:
     def __init__(self, total_floors, travel_time=2, exit_time=4):
-        self.Lift = Lift1(total_floors=total_floors,max_capacity=5, travel_time=travel_time, enter_exit_time=exit_time) #initialising lift with travel_time and exit_time
-        self.priority_queue = PriorityQueue_LOOK(self.Lift)
+        self.Lift = Lift(total_floors=total_floors,max_capacity=5, travel_time=travel_time, enter_exit_time=exit_time) #initialising lift with travel_time and exit_time
+        self.priority_queue = PriorityQueueLOOK(self.Lift)
         
 
     def run(self):#runs the LOOK algorithm and returns the total time taken.
@@ -170,7 +169,7 @@ class LOOK:
 
     def calculate_total_time(self):
         #initialise the lift system with the given parameters
-        lift_system = LiftSystem_LOOK(self.total_floors, self.time_between_floors, self.time_to_exit)
+        lift_system = LiftSystemLOOK(self.total_floors, self.time_between_floors, self.time_to_exit)
         lift_system.Lift.max_capacity = self.capacity  # Set lift capacity
 
         #add requests to the system
@@ -181,9 +180,9 @@ class LOOK:
         #run the simulation and return the total time elapsed
         return lift_system.run()
 
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     #create lift system
-    lift_system = LiftSystem_LOOK(total_floors=10)
+    lift_system = LiftSystemLOOK(total_floors=10)
 
     #add test requests
     request1 = Request(1, 5)  #up
@@ -201,6 +200,6 @@ if __name__ == "__main__":
 
     #start moving the lift
     print("\n Starting Lift System Execution...\n")
-    lift_system.request_move_lift()
+    lift_system.request_move_lift()'''
 
 
