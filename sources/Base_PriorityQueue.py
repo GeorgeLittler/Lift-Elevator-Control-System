@@ -1,8 +1,8 @@
 from Request import Request
-from Lift import Lift
+from Lift1 import Lift1
 
 class Base_PriorityQueue:
-    def __init__(self, lift_instance: Lift):
+    def __init__(self, lift_instance: Lift1):
         #initialises the priority queue with a lift instance and empty queues
         self.lift = lift_instance
         self.Active_Queue: list[Request] = []#holds requests currently being processed
@@ -14,7 +14,7 @@ class Base_PriorityQueue:
         #loads a request into either the active or waiting queue based on conditions
         request_dir = request.request_direction()
 
-        if len(self.Active_Queue) < self.lift.capacity:
+        if len(self.Active_Queue) < self.lift.max_capacity:
             if not self.Active_Queue:
                 #if active queue is empty, set lift direction and add the request
                 self.lift.lift_direction = request_dir
@@ -50,7 +50,7 @@ class Base_PriorityQueue:
             if moving_requests:
                 #set lift direction and move requests to active queue
                 self.lift.lift_direction = moving_requests[0].request_direction()
-                for request in moving_requests[:self.lift.capacity]:
+                for request in moving_requests[:self.lift.max_capacity]:
                     self.Active_Queue.append(request)
                     self.Waiting_Queue.remove(request)
                     print(f"Moved {request.start_floor}->{request.destination_floor} from Waiting Queue to Active Queue")
@@ -71,6 +71,7 @@ class Base_PriorityQueue:
 
     
             
+
 
 
 

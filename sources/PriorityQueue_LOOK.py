@@ -1,11 +1,9 @@
 from Request import Request
-from Lift import Lift
-from Request import Request
-from Lift import Lift
+from Lift1 import Lift1
 from Base_PriorityQueue import Base_PriorityQueue
 
 class PriorityQueue_LOOK(Base_PriorityQueue):
-    def __init__(self, lift_instance: Lift):
+    def __init__(self, lift_instance: Lift1):
         super().__init__(lift_instance)  #initialising the base class
         self.just_started = False#flag to check if the lift just started
 
@@ -17,7 +15,7 @@ class PriorityQueue_LOOK(Base_PriorityQueue):
             print(f"Request {request.start_floor}->{request.destination_floor} completed. Removed from Active Queue.")
 
         #update time elapsed based on completed requests
-        self.lift.time_elapsed += len(completed_requests) * self.lift.exit_time
+        self.lift.time_elapsed += len(completed_requests) * self.lift.enter_exit_time
 
         #update min or max heap based on lift direction
         if self.lift.lift_direction == "positive":
@@ -43,6 +41,7 @@ class PriorityQueue_LOOK(Base_PriorityQueue):
         if not self.Active_Queue and not self.Waiting_Queue and not self.MinHeap_Queue and not self.MaxHeap_Queue:
             print("No more requests left. Lift stopping.")
             
+
 
 
 

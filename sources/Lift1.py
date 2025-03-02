@@ -11,3 +11,6 @@ class Lift1:
         self.enter_exit_time = enter_exit_time
         self.time_elapsed = 0
         self.direction = "positive"
+        self.lift_direction = None
+        self.visited_floors = set()  # Track visited floors
+

@@ -1,11 +1,11 @@
 from Base_PriorityQueue import Base_PriorityQueue
-from Lift import Lift
+from Lift1 import Lift1
 from Request import Request
 
 class PriorityQueue_SCAN(Base_PriorityQueue):
-    def __init__(self, lift_instance: Lift):
+    def __init__(self, lift_instance: Lift1):
         super().__init__(lift_instance)  #initialising the base class
-        self.total_floors = 10  #total floors in the building (can be passed as a parameter if needed)
+        self.lift.total_floors = 10  #total floors in the building (can be passed as a parameter if needed)
 
     def get_next_stop(self):
         if self.lift.lift_direction == "positive":
@@ -15,8 +15,8 @@ class PriorityQueue_SCAN(Base_PriorityQueue):
                 if next_stop is not None:
                     return next_stop
             #if no more requests in the current direction, move to the top floor
-            if self.lift.current_floor < self.total_floors:
-                return self.total_floors
+            if self.lift.current_floor < self.lift.total_floors:
+                return self.lift.total_floors
             else:
                 #if already at the top floor, switch direction
                 self.lift.lift_direction = "negative"
@@ -49,7 +49,7 @@ class PriorityQueue_SCAN(Base_PriorityQueue):
             print(f"Request {request.start_floor}->{request.destination_floor} completed. Removed from Active Queue.")
     
         #update time_elapsed for passenger exit
-        self.lift.time_elapsed += len(completed_requests) * self.lift.exit_time  #use self.lift.exit_time
+        self.lift.time_elapsed += len(completed_requests) * self.lift.enter_exit_time  #use self.lift.exit_time
 
         #rebuild MinHeap and MaxHeap after modification
         if self.lift.lift_direction == "positive":
@@ -64,7 +64,7 @@ class PriorityQueue_SCAN(Base_PriorityQueue):
 
         #ensuring direction only changes after reaching the highest or lowest floor
         if self.lift.lift_direction == "positive":
-            if not self.MinHeap_Queue and not self.Active_Queue and self.lift.current_floor == self.total_floors:
+            if not self.MinHeap_Queue and not self.Active_Queue and self.lift.current_floor == self.lift.total_floors:
                 print("Reached top floor. Changing direction to downward.")
                 self.lift.lift_direction = "negative"
                 self.Loading_Waiting_to_Active()
@@ -94,11 +94,12 @@ class PriorityQueue_SCAN(Base_PriorityQueue):
     def check_direction_change(self):#Check if the lift needs to change direction (only at the top or bottom floor).
         if not self.Active_Queue:
             if self.lift.lift_direction== "positive":
-                return self.total_floors
+                return self.lift.total_floors
 
             elif self.lift.lift_direction=="negative":
                 return 0
                 
                 
+
 
 

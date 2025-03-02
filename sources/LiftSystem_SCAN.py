@@ -1,10 +1,10 @@
 from Request import Request
 from PriorityQueue_SCAN import PriorityQueue_SCAN
-from Lift import Lift
+from Lift1 import Lift1
 class LiftSystem_SCAN:
     def __init__(self, total_floors, travel_time=2, exit_time=4):
-        self.total_floors = total_floors
-        self.Lift = Lift(capacity=5, travel_time=travel_time, exit_time=exit_time) #initialising lift with travel_time and exit_time
+        
+        self.Lift = Lift1(total_floors=total_floors,max_capacity=5, travel_time=travel_time, enter_exit_time=exit_time) #initialising lift with travel_time and exit_time
         self.priority_queue = PriorityQueue_SCAN(self.Lift)
 
     def run(self):#Runs the SCAN algorithm and returns the total time taken.
@@ -29,11 +29,11 @@ class LiftSystem_SCAN:
             self.priority_queue.Removing_requests_from_Active_and_MaxMinHeap()
             for req in self.priority_queue.Active_Queue:
                 if req.destination_floor==self.Lift.current_floor:
-                    self.Lift.time_elapsed += self.Lift.exit_time
+                    self.Lift.time_elapsed += self.Lift.enter_exit_time
                     break
             
                 elif req.start_floor==self.Lift.current_floor:
-                    self.Lift.time_elapsed += self.Lift.exit_time
+                    self.Lift.time_elapsed += self.Lift.enter_exit_time
                     break
             #updating queues and check for direction changes
             self.priority_queue.update_queues()
@@ -45,7 +45,7 @@ class LiftSystem_SCAN:
                 self.Lift.time_elapsed += abs(next_stop - self.Lift.current_floor) * self.Lift.travel_time  #use self.Lift.travel_time
                 self.Lift.current_floor = next_stop
 
-                if self.Lift.current_floor == self.priority_queue.total_floors:
+                if self.Lift.current_floor == self.Lift.total_floors:
                     self.Lift.lift_direction = "negative"
                     self.priority_queue.Loading_Waiting_to_Active()
                 elif self.Lift.current_floor == 0:
@@ -128,7 +128,7 @@ class SCAN:
     def calculate_total_time(self):
         #initialise the lift system with the given parameters
         lift_system = LiftSystem_SCAN(self.total_floors, self.time_between_floors, self.time_to_exit)
-        lift_system.Lift.capacity = self.capacity  # Set lift capacity
+        lift_system.Lift.max_capacity = self.capacity  # Set lift capacity
 
         #add requests to the system
         for start_floor, destinations in self.requests.items():
@@ -160,4 +160,5 @@ if __name__ == "__main__":
     #start moving the lift
     print("\n Starting Lift System Execution using SCAN algorithm...\n")
     lift_system.request_move_lift()
+
 

@@ -1,10 +1,10 @@
+
 from PriorityQueue_LOOK import PriorityQueue_LOOK
-from Lift import Lift
+from Lift1 import Lift1
 from Request import Request
 class LiftSystem_LOOK:
     def __init__(self, total_floors, travel_time=2, exit_time=4):
-        self.total_floors = total_floors
-        self.Lift = Lift(capacity=5, travel_time=travel_time, exit_time=exit_time) #initialising lift with travel_time and exit_time
+        self.Lift = Lift1(total_floors=total_floors,max_capacity=5, travel_time=travel_time, enter_exit_time=exit_time) #initialising lift with travel_time and exit_time
         self.priority_queue = PriorityQueue_LOOK(self.Lift)
         
 
@@ -160,7 +160,6 @@ class LiftSystem_LOOK:
             return
         self.pick_up_passengers(request)  #add request to queue
 
-
 class LOOK:
     def __init__(self, total_floors, max_capacity, requests, time_between_floors, time_to_exit):
         self.total_floors = total_floors
@@ -172,7 +171,7 @@ class LOOK:
     def calculate_total_time(self):
         #initialise the lift system with the given parameters
         lift_system = LiftSystem_LOOK(self.total_floors, self.time_between_floors, self.time_to_exit)
-        lift_system.Lift.capacity = self.capacity  # Set lift capacity
+        lift_system.Lift.max_capacity = self.capacity  # Set lift capacity
 
         #add requests to the system
         for start_floor, destinations in self.requests.items():
@@ -203,3 +202,5 @@ if __name__ == "__main__":
     #start moving the lift
     print("\n Starting Lift System Execution...\n")
     lift_system.request_move_lift()
+
+
