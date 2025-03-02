@@ -1,9 +1,10 @@
-from LiftSystem_LOOK import LiftSystem_LOOK
 from Request import Request
 from PriorityQueue_SCAN import PriorityQueue_SCAN
-class LiftSystem_SCAN(LiftSystem_LOOK):
+from Lift import Lift
+class LiftSystem_SCAN:
     def __init__(self, total_floors, travel_time=2, exit_time=4):
-        super().__init__(total_floors, travel_time, exit_time)  #initialising base class with travel_time and exit_time
+        self.total_floors = total_floors
+        self.Lift = Lift(capacity=5, travel_time=travel_time, exit_time=exit_time) #initialising lift with travel_time and exit_time
         self.priority_queue = PriorityQueue_SCAN(self.Lift)
 
     def run(self):#Runs the SCAN algorithm and returns the total time taken.
@@ -52,7 +53,20 @@ class LiftSystem_SCAN(LiftSystem_LOOK):
                     self.priority_queue.Loading_Waiting_to_Active()
 
         return self.Lift.time_elapsed  #return self.Lift.time_elapsed
-   
+    
+        #picks up passengers based on priority and available space
+    def pick_up_passengers(self, request:Request):
+        #print(f"Adding request: {request.start_floor} -> {request.destination_floor}")  #Debugging
+        self.priority_queue.loading_Request_into_Active_Waiting(request)
+        self.priority_queue.Loading_Waiting_to_Active()
+
+    def add_request(self, request:Request):
+        #handles new requests dynamically
+        if request.request_direction() is None:
+            print(f"Invalid request: Start floor {request.start_floor} == Destination floor {request.destination_floor}")
+            return
+        self.pick_up_passengers(request)  #add request to queue
+
     def request_move_lift(self):
         print("Starting SCAN algorithm processing...")
 
@@ -146,3 +160,4 @@ if __name__ == "__main__":
     #start moving the lift
     print("\n Starting Lift System Execution using SCAN algorithm...\n")
     lift_system.request_move_lift()
+

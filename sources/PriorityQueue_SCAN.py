@@ -1,8 +1,8 @@
-from PriorityQueue_LOOK import PriorityQueue_LOOK
+from Base_PriorityQueue import Base_PriorityQueue
 from Lift import Lift
 from Request import Request
 
-class PriorityQueue_SCAN(PriorityQueue_LOOK):
+class PriorityQueue_SCAN(Base_PriorityQueue):
     def __init__(self, lift_instance: Lift):
         super().__init__(lift_instance)  #initialising the base class
         self.total_floors = 10  #total floors in the building (can be passed as a parameter if needed)
@@ -100,4 +100,5 @@ class PriorityQueue_SCAN(PriorityQueue_LOOK):
                 return 0
                 
                 
+
 
